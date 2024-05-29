@@ -1,3 +1,5 @@
+package address_data;
+
 public class AddressEntry {
 
     private String name;

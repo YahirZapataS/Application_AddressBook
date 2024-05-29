@@ -1,3 +1,4 @@
+package address;
 import java.util.Scanner;
 
 public class Menu {

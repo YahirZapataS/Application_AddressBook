@@ -1,3 +1,5 @@
+package address_data;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -14,19 +16,15 @@ public class AddressBook {
 
     public AddressBook(String filePath) {
         this.filePath = filePath;
+        this.entries = new ArrayList<>();
         uploadEntriesFromFile();
     }
 
     public void addContact(AddressEntry entry) {
-        if (noDuplicado(entry)) {
-            System.out.println("---------------------");
-            System.out.println("El contacto ya existe en tu Directorio");
-        } else {
-            entries.add(entry);
-            saveEntriesFiles();
-            System.out.println("---------------------");
-            System.out.println("Contacto Agregado");
-        }
+        entries.add(entry);
+        saveEntriesFiles();
+        System.out.println("---------------------");
+        System.out.println("Contacto Agregado");
     }
 
     public void deleteContact(AddressEntry entry) {
@@ -108,15 +106,5 @@ public class AddressBook {
                 return name1.compareTo(name2);
             }
         });
-    }
-
-    private boolean noDuplicado(AddressEntry entry) {
-        for (AddressEntry existingEntry : entries) {
-            if (existingEntry.getName().equals(entry.getName())
-                    && existingEntry.getLastName().equals(entry.getLastName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }
