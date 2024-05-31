@@ -1,10 +1,6 @@
 package address_data;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,37 +10,55 @@ public class AddressBook {
     private List<AddressEntry> entries;
     private String filePath;
 
+    // Constructor
     public AddressBook(String filePath) {
+        entries = new ArrayList<>();
         this.filePath = filePath;
-        this.entries = new ArrayList<>();
         uploadEntriesFromFile();
     }
 
     public void addContact(AddressEntry entry) {
-        entries.add(entry);
-        saveEntriesFiles();
-        System.out.println("---------------------");
-        System.out.println("Contacto Agregado");
+        if (noDuplicate(entry)) {
+            System.out.println("---------------------------------------");
+            System.out.println("El contacto ya existe en tu Directorio");
+            System.out.println("---------------------------------------");
+        } else {
+            entries.add(entry);
+            saveEntriesFiles();
+            System.out.println("---------------------------------------");
+            System.out.println("¡Contacto agregado con exito!");
+            System.out.println("---------------------------------------");
+
+        }
+    }
+
+    private boolean noDuplicate(AddressEntry entry) {
+        for (AddressEntry existingEntry : entries) {
+            if (existingEntry.getName().equals(entry.getName())
+                    && existingEntry.getLastName().equals(entry.getLastName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void deleteContact(AddressEntry entry) {
         entries.remove(entry);
         saveEntriesFiles();
-        System.out.println("Contacto Eliminado");
+        System.out.println("Contacto Eliminado Exitosamente");
     }
 
-    public List<AddressEntry> searchLastName(String lastName) {
+    public List<AddressEntry> searchContactByLastName(String lastName) {
         List<AddressEntry> searchResults = new ArrayList<>();
         for (AddressEntry entry : entries) {
             if (entry.getLastName().startsWith(lastName)) {
                 searchResults.add(entry);
             }
         }
-
         return searchResults;
     }
 
-    public List<AddressEntry> viewAllContacts() {
+    public List<AddressEntry> getAllEntries() {
         return entries;
     }
 
@@ -58,7 +72,7 @@ public class AddressBook {
                 }
             }
         } catch (IOException e) {
-            System.out.println("No se han podido cargar los datos del Directorio");
+            System.out.println("¡Error! No se han podido cargar los datos del Directorio");
         }
     }
 
@@ -69,13 +83,12 @@ public class AddressBook {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("No se han podido guardar los cambios.");
+            System.out.println("¡Error! No se han podido guardar los cambios.");
         }
     }
 
     private AddressEntry createAddressEntryFromString(String line) {
         String[] parts = line.split(",");
-
         if (parts.length == 8) {
             String name = parts[0];
             String lastName = parts[1];
@@ -85,22 +98,22 @@ public class AddressBook {
             String postalCode = parts[5];
             String email = parts[6];
             String phone = parts[7];
-
             return new AddressEntry(name, lastName, street, city, state, postalCode, email, phone);
         }
-
         return null;
     }
 
     private String entryToString(AddressEntry entry) {
-        return entry.getName() + " " + entry.getLastName() + " " + entry.getStreet() + " " + entry.getCity() + " "
-                + entry.getState() + " " + entry.getPostalCode() + " " + entry.getEmail() + " " + entry.getPhone();
+        return entry.getName() + "," + entry.getLastName() + "," + entry.getStreet() + ","
+                + entry.getCity() + "," + entry.getState() + "," + entry.getPostalCode() + ","
+                + entry.getEmail() + "," + entry.getPhone();
     }
 
-    public void orderContact() {
+    public void ordenarContactos() {
         Collections.sort(entries, new Comparator<AddressEntry>() {
             @Override
             public int compare(AddressEntry entry1, AddressEntry entry2) {
+
                 String name1 = entry1.getLastName();
                 String name2 = entry2.getLastName();
                 return name1.compareTo(name2);

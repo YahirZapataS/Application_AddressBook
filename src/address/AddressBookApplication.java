@@ -1,17 +1,17 @@
+package address;
+
 import java.util.List;
 import java.util.Scanner;
 
 import address_data.AddressBook;
 import address_data.AddressEntry;
-import address.Menu;
 
-public class App {
-
+public class AddressBookApplication {
     private AddressBook addressBook;
     private Scanner scanner;
 
-    public App() {
-        String filePath = "C:/Users/UV/Documents/Application_AddressBook";
+    public AddressBookApplication() {
+        String filePath = "G:/yahir/Documentos/Application_AddressBook/AddressBook_Contacts.txt";
         addressBook = new AddressBook(filePath);
         scanner = new Scanner(System.in);
     }
@@ -32,10 +32,10 @@ public class App {
                     deleteContact();
                     break;
                 case "3":
-                    searchContact();
+                    searchContactByLastName();
                     break;
                 case "4":
-                    viewAllContacts();
+                    showAllContacts();
                     break;
                 case "5":
                     exit = true;
@@ -53,30 +53,31 @@ public class App {
     private void addContact() {
         System.out.println("Complete los datos del contacto en los siguientes campos:");
         System.out.print("Nombre(s): ");
-        String name = scanner.nextLine();
+        String Nombre = scanner.nextLine();
         System.out.print("Apellido(s): ");
-        String lastName = scanner.nextLine();
+        String Apellido = scanner.nextLine();
         System.out.print("Calle: ");
-        String street = scanner.nextLine();
+        String Calle = scanner.nextLine();
         System.out.print("Ciudad: ");
-        String city = scanner.nextLine();
+        String Ciudad = scanner.nextLine();
         System.out.print("Estado: ");
-        String state = scanner.nextLine();
+        String Estado = scanner.nextLine();
         System.out.print("Código postal: ");
-        String postalCode = scanner.nextLine();
+        String codigoPostal = scanner.nextLine();
         System.out.print("Correo electrónico: ");
         String email = scanner.nextLine();
         System.out.print("Teléfono: ");
-        String phone = scanner.nextLine();
+        String Telefono = scanner.nextLine();
 
-        AddressEntry entry = new AddressEntry(name, lastName, street, city, state, postalCode, email, phone);
+        AddressEntry entry = new AddressEntry(Nombre, Apellido, Calle, Ciudad, Estado,
+                codigoPostal, email, Telefono);
         addressBook.addContact(entry);
     }
 
     private void deleteContact() {
         System.out.println("Ingrese el apellido del contacto a eliminar: ");
-        String lastName = scanner.nextLine();
-        List<AddressEntry> searchResults = addressBook.searchLastName(lastName);
+        String Apellido = scanner.nextLine();
+        List<AddressEntry> searchResults = addressBook.searchContactByLastName(Apellido);
         if (!searchResults.isEmpty()) {
             System.out.println("Se encontraron las siguientes entradas:");
             for (int i = 0; i < searchResults.size(); i++) {
@@ -91,14 +92,14 @@ public class App {
                 System.out.println("Opción inválida.");
             }
         } else {
-            System.out.println("No se encontraron contactos con ese Apellido");
+            System.out.println("No se encontraron contactos con ese a");
         }
     }
 
-    private void searchContact() {
+    private void searchContactByLastName() {
         System.out.println("Ingrese el inicio del apellido para buscar:");
-        String lastName = scanner.nextLine();
-        List<AddressEntry> searchResults = addressBook.searchLastName(lastName);
+        String Apellido = scanner.nextLine();
+        List<AddressEntry> searchResults = addressBook.searchContactByLastName(Apellido);
         if (!searchResults.isEmpty()) {
             System.out.println("Se encontraron las siguientes entradas:");
             for (AddressEntry entry : searchResults) {
@@ -110,8 +111,8 @@ public class App {
         }
     }
 
-    private void viewAllContacts() {
-        List<AddressEntry> entries = addressBook.viewAllContacts();
+    private void showAllContacts() {
+        List<AddressEntry> entries = addressBook.getAllEntries();
         if (!entries.isEmpty()) {
             System.out.println("Lista de entradas:");
             for (AddressEntry entry : entries) {
@@ -123,8 +124,8 @@ public class App {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        App app = new App();
-        app.run();
+    public static void main(String[] args) {
+        AddressBookApplication application = new AddressBookApplication();
+        application.run();
     }
 }
